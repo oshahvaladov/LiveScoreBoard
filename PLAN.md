@@ -18,7 +18,7 @@ This document outlines the plan to create the Live Score Board application as di
 ## 2. Implementation Details
 
 - **Project Type:** Symfony Console Application.
-- **Core Logic:** A `FootballScoreBoard` service, registered as a singleton in the DI container, will hold the `Match` objects in a private array property.
+- **Core Logic:** A `FootballScoreBoard` service, registered as a singleton in the DI container, will hold the `Game` objects in a private array property.
 - **Entry Point:** A `ScoreBoardCommand` class will provide the interactive prompt and parse user input.
 - **Error Handling:** Custom exceptions (`MatchAlreadyExistsException`, `MatchNotFoundException`) will be used for logical errors. The command will handle invalid user input gracefully.
 
@@ -53,6 +53,4 @@ This document outlines the plan to create the Live Score Board application as di
 8.  `Feat: Add interactive console command`.
 9.  `Docs: Add README with setup and usage instructions`.
 
-## 5. Deadline
 
-- The task should be ready by Monday, December 22, 2025.
