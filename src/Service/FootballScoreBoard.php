@@ -52,7 +52,17 @@ class FootballScoreBoard implements ScoreBoardInterface
 
     public function getSummary(): array
     {
-        return array_values($this->matches);
+        $games = array_values($this->matches);
+        usort($games, static function (Game $a, Game $b) {
+            $totalScoreComparison = $b->getTotalScore() <=> $a->getTotalScore();
+            if ($totalScoreComparison !== 0) {
+                return $totalScoreComparison;
+            }
+
+            return $b->getStartTime() <=> $a->getStartTime();
+        });
+
+        return $games;
     }
 
     private function getMatchKey(string $homeTeam, string $awayTeam): string

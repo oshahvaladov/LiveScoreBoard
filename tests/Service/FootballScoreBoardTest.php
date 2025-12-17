@@ -115,4 +115,43 @@ class FootballScoreBoardTest extends TestCase
         // When
         $this->scoreBoard->updateScore('Mexico', 'Canada', -1, 0);
     }
+
+    public function testGetSummaryReturnsGamesSortedCorrectly(): void
+    {
+        // Given - Data from the PDF example
+        $this->scoreBoard->startGame('Mexico', 'Canada'); // 0-5
+        usleep(1000);
+        $this->scoreBoard->startGame('Spain', 'Brazil'); // 10-2
+        usleep(1000);
+        $this->scoreBoard->startGame('Germany', 'France'); // 2-2
+        usleep(1000);
+        $this->scoreBoard->startGame('Uruguay', 'Italy'); // 6-6
+        usleep(1000);
+        $this->scoreBoard->startGame('Argentina', 'Australia'); // 3-1
+
+        $this->scoreBoard->updateScore('Mexico', 'Canada', 0, 5);
+        $this->scoreBoard->updateScore('Spain', 'Brazil', 10, 2);
+        $this->scoreBoard->updateScore('Germany', 'France', 2, 2);
+        $this->scoreBoard->updateScore('Uruguay', 'Italy', 6, 6);
+        $this->scoreBoard->updateScore('Argentina', 'Australia', 3, 1);
+
+        // When
+        $summary = $this->scoreBoard->getSummary();
+
+        // Then
+        $this->assertCount(5, $summary);
+
+        // Expected order:
+        // 1. Uruguay 6 - Italy 6 (Total 12, most recent)
+        // 2. Spain 10 - Brazil 2 (Total 12)
+        // 3. Mexico 0 - Canada 5 (Total 5)
+        // 4. Argentina 3 - Australia 1 (Total 4, most recent)
+        // 5. Germany 2 - France 2 (Total 4)
+
+        $this->assertSame('Uruguay', $summary[0]->getHomeTeam());
+        $this->assertSame('Spain', $summary[1]->getHomeTeam());
+        $this->assertSame('Mexico', $summary[2]->getHomeTeam());
+        $this->assertSame('Argentina', $summary[3]->getHomeTeam());
+        $this->assertSame('Germany', $summary[4]->getHomeTeam());
+    }
 }
