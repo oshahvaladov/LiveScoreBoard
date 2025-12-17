@@ -6,7 +6,7 @@ namespace App\Entity;
 
 use DateTimeImmutable;
 
-class Match
+class Game
 {
     private int $homeScore = 0;
     private int $awayScore = 0;

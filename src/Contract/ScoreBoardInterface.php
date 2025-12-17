@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Contract;
 
-use App\Entity\Match;
+use App\Entity\Game;
 
 interface ScoreBoardInterface
 {
@@ -15,7 +15,7 @@ interface ScoreBoardInterface
     public function updateScore(string $homeTeam, string $awayTeam, int $homeScore, int $awayScore): void;
 
     /**
-     * @return Match[]
+     * @return Game[]
      */
     public function getSummary(): array;
 }
