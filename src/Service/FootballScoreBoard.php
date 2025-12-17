@@ -9,6 +9,8 @@ use App\Entity\Game;
 
 use App\Exception\MatchAlreadyExistsException;
 
+use App\Exception\MatchNotFoundException;
+
 class FootballScoreBoard implements ScoreBoardInterface
 {
     /** @var Game[] */
@@ -27,7 +29,11 @@ class FootballScoreBoard implements ScoreBoardInterface
 
     public function finishGame(string $homeTeam, string $awayTeam): void
     {
-        // TODO: Implement finishGame() method.
+        $matchKey = $this->getMatchKey($homeTeam, $awayTeam);
+        if (!isset($this->matches[$matchKey])) {
+            throw new MatchNotFoundException("Match between $homeTeam and $awayTeam not found.");
+        }
+        unset($this->matches[$matchKey]);
     }
 
     public function updateScore(string $homeTeam, string $awayTeam, int $homeScore, int $awayScore): void

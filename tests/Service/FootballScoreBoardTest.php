@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Service;
 
 use App\Exception\MatchAlreadyExistsException;
+use App\Exception\MatchNotFoundException;
 use App\Service\FootballScoreBoard;
 use PHPUnit\Framework\TestCase;
 
@@ -45,5 +46,33 @@ class FootballScoreBoardTest extends TestCase
 
         // When
         $this->scoreBoard->startGame('Mexico', 'Canada');
+    }
+
+    public function testFinishGameSuccessfully(): void
+    {
+        // Given
+        $this->scoreBoard->startGame('Mexico', 'Canada');
+        $this->scoreBoard->startGame('Spain', 'Brazil');
+
+        // When
+        $this->scoreBoard->finishGame('Mexico', 'Canada');
+
+        // Then
+        $summary = $this->scoreBoard->getSummary();
+        $this->assertCount(1, $summary);
+
+        $remainingGame = $summary[0];
+        $this->assertSame('Spain', $remainingGame->getHomeTeam());
+        $this->assertSame('Brazil', $remainingGame->getAwayTeam());
+    }
+
+    public function testFinishGameThatDoesNotExistThrowsException(): void
+    {
+        // Then
+        $this->expectException(MatchNotFoundException::class);
+        $this->expectExceptionMessage('Match between Mexico and Canada not found.');
+
+        // When
+        $this->scoreBoard->finishGame('Mexico', 'Canada');
     }
 }
