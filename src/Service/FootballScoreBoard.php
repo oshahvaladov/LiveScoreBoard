@@ -38,7 +38,16 @@ class FootballScoreBoard implements ScoreBoardInterface
 
     public function updateScore(string $homeTeam, string $awayTeam, int $homeScore, int $awayScore): void
     {
-        // TODO: Implement updateScore() method.
+        if ($homeScore < 0 || $awayScore < 0) {
+            throw new \InvalidArgumentException('Scores cannot be negative.');
+        }
+
+        $matchKey = $this->getMatchKey($homeTeam, $awayTeam);
+        if (!isset($this->matches[$matchKey])) {
+            throw new MatchNotFoundException("Match between $homeTeam and $awayTeam not found.");
+        }
+
+        $this->matches[$matchKey]->updateScore($homeScore, $awayScore);
     }
 
     public function getSummary(): array

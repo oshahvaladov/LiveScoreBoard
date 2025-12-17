@@ -75,4 +75,44 @@ class FootballScoreBoardTest extends TestCase
         // When
         $this->scoreBoard->finishGame('Mexico', 'Canada');
     }
+
+    public function testUpdateScoreSuccessfully(): void
+    {
+        // Given
+        $this->scoreBoard->startGame('Mexico', 'Canada');
+
+        // When
+        $this->scoreBoard->updateScore('Mexico', 'Canada', 2, 1);
+
+        // Then
+        $summary = $this->scoreBoard->getSummary();
+        $this->assertCount(1, $summary);
+
+        $game = $summary[0];
+        $this->assertSame(2, $game->getHomeScore());
+        $this->assertSame(1, $game->getAwayScore());
+    }
+
+    public function testUpdateScoreForNonExistentGameThrowsException(): void
+    {
+        // Then
+        $this->expectException(MatchNotFoundException::class);
+        $this->expectExceptionMessage('Match between Mexico and Canada not found.');
+
+        // When
+        $this->scoreBoard->updateScore('Mexico', 'Canada', 1, 0);
+    }
+
+    public function testUpdateScoreWithNegativeValuesThrowsException(): void
+    {
+        // Given
+        $this->scoreBoard->startGame('Mexico', 'Canada');
+
+        // Then
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Scores cannot be negative.');
+
+        // When
+        $this->scoreBoard->updateScore('Mexico', 'Canada', -1, 0);
+    }
 }
